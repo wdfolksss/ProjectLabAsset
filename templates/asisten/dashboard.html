@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Lab Asset</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-slate-100">
+    <div class="flex">
+         {% include 'layout/sidebar_asisten.html' %}
+         <div class="flex-1">
+            <!-- Navbar -->
+            <nav class="bg-white h-20 shadow flex items-center justify-between px-10">
+                <div>
+                    <h2 class="text-3xl font-bold text-slate-800">Dashboard</h2>
+                    <p class="text-gray-500">Ringkasan Data Inventaris Laboratorium
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-5">
+                    <i class="fa-regular fa-bell text-2xl text-gray-500"></i>
+                    <div class="flex items-center gap-3">
+                        <div class="bg-teal-500 w-10 h-10 rounded-full flex justify-center items-center text-white">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold">  Asisten </h3>
+                            <p class="text-sm text-gray-500">Asisten Laboratorium</p>
+                        </div>
+                    </div>
+                </div>
+            </nav> 
+            <!-- Card -->
+                <div class="p-10">
+                    <div class="grid grid-cols-4 gap-6">
+                        <div class="bg-white rounded-2xl shadow p-6">
+                            <p class="text-gray-500">Total Aset </p>
+                    <h1 class="text-5xl font-bold text-blue-700 mt-3"> 0 </h1>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow p-6">
+                    <p class="text-gray-500"> Kondisi Baik </p>
+                    <h1 class="text-5xl font-bold text-green-600 mt-3"> 0 </h1>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow p-6">
+                    <p class="text-gray-500"> Perlu Perbaikan </p>
+                    <h1 class="text-5xl font-bold text-orange-500 mt-3"> 0 </h1>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow p-6">
+                    <p class="text-gray-500"> Kategori </p>
+                    <h1 class="text-5xl font-bold text-purple-600 mt-3"> 0 </h1>
+                </div>
+            </div>
+
+            <!-- Chart -->
+            <div class="grid grid-cols-3 gap-6 mt-8">
+                <div class="col-span-2 bg-white rounded-2xl shadow p-6">
+                    <h2 class="text-xl font-semibold mb-6"> Grafik Aset </h2>
+                    <canvas id="barChart"></canvas>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow p-6">
+                    <h2 class="text-xl font-semibold mb-6">Status Kondisi</h2>
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="bg-white rounded-2xl shadow mt-8 overflow-hidden">
+                <div class="px-6 py-5 border-b">
+                    <h2 class="text-xl font-semibold">
+                        Data Aset Terbaru
+                    </h2>
+                </div>
+
+                <table class="w-full">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="p-4 text-left">Kode</th>
+                            <th class="p-4 text-left">Nama Aset</th>
+                            <th class="p-4 text-left">Kategori</th>
+                            <th class="p-4 text-left">Kondisi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr class="border-b">
+                            <td class="p-4">AST001</td>
+                            <td class="p-4">Laptop Lenovo</td>
+                            <td class="p-4">Komputer</td>
+                            <td class="p-4">
+                                <span class="bg-green-100 text-green-700 px-4 py-1 rounded-full">
+                                    Baik
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: {
+        labels: ['Komputer','Printer','Proyektor','Mikroskop'],
+        datasets: [{
+            label: 'Jumlah',
+            data: [5,2,4,3]
+        }]
+    }
+});
+
+new Chart(document.getElementById('pieChart'), {
+    type:'doughnut',
+    data:{
+        labels:['Baik','Rusak','Perbaikan'],
+        datasets:[{
+            data:[10,2,1]
+        }]
+    }
+});
+</script>
+</body>
+</html>

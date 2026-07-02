@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- SIDEBAR -->
+     <aside class="w-64 min-h-screen bg-[#1F456D] text-white flex flex-col">
+    <!-- Logo -->
+    <div class="px-6 py-7 flex items-center gap-4 border-b border-blue-800">
+        <div class="bg-teal-500 w-12 h-12 rounded-xl flex items-center justify-center">
+            <i class="fa-solid fa-flask text-2xl"></i>
+        </div>
+
+        <div>
+            <h1 class="text-xl font-bold">LabInventaris</h1>
+            <!-- <p class="text-blue-200 text-sm">Version 2.1</p> -->
+        </div>
+    </div>
+
+    <!-- User -->
+    <div class="p-5">
+        <div class="bg-[#2B527C] rounded-xl p-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-teal-500 w-10 h-10 rounded-full flex justify-center items-center">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold">Asisten</h3>
+                    <p class="text-blue-200 text-sm">Asisten Laboratorium</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu -->
+    <div class="px-5 space-y-3">
+        <a href="/dashboard" class="flex items-center gap-4 bg-teal-600 py-4 px-5 rounded-xl">
+            <i class="fa-solid fa-chart-line"></i>Dashboard</a>
+        <a href="/aset" class="flex items-center gap-4 py-4 px-5 rounded-xl hover:bg-[#2B527C] duration-300">
+            <i class="fa-solid fa-boxes-stacked"></i> Data Aset
+        </a>
+
+        <a href="/user"  class="flex items-center gap-4 py-4 px-5 rounded-xl hover:bg-[#2B527C] duration-300">
+            <i class="fa-solid fa-users"></i> User </a>
+
+        <a href="/laporan" class="flex items-center gap-4 py-4 px-5 rounded-xl hover:bg-[#2B527C] duration-300">
+            <i class="fa-solid fa-file-lines"></i> Laporan </a>
+    </div>
+
+    <!-- Logout -->
+    <div class="mt-auto p-5">
+        <a href="/" class="flex items-center justify-center gap-3 bg-red-500 hover:bg-red-600 py-4 rounded-xl">
+            <i class="fa-solid fa-right-from-bracket"></i>Logout
+        </a>
+    </div>
+</aside>
+</body>
+</html>
