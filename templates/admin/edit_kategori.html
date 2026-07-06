@@ -52,8 +52,7 @@
                             <td class="px-6 py-4 text-gray-600"> {{ k.deskripsi }}</td>
                             <td class="px-6 py-4">
                                 <div class="flex justify-center gap-3">
-                                    <button onclick="bukaModalEdit('{{ k.id_kategori }}', '{{ k.nama_kategori | replace('\'', '\\\'') }}', '{{ k.deskripsi | replace('\n', ' ') | replace('\'', '\\\'') }}')"></button>
-                                        class="w-10 h-10 rounded-lg bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center cursor-pointer">
+                                    <button onclick="bukaModalEdit('{{ k.id_kategori }}', '{{ k.nama_kategori | replace('\'', '\\\'') }}', '{{ k.deskripsi | replace('\n', ' ') | replace('\'', '\\\'') }}')"                                            class="w-10 h-10 rounded-lg bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center cursor-pointer">
                                         <i class="fa-solid fa-pen"></i>
                                     </button>
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Sidebar Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -43,13 +43,13 @@
         <div class="px-5 space-y-3">
             <a href="/admin/dashboard" class="flex items-center gap-4 py-4 px-5 rounded-xl
                 {% if active == 'dashboard' %} bg-teal-600 {% else %} hover:bg-[#2B527C] {% endif %}">
-                    <i class="fa-solid fa-chart-line"></i>
+                    <i class="fa-solid fa-gauge-high"></i>
                     Dashboard
                 </a>
                 
                  <a href="/admin/aset" class="flex items-center gap-4 py-4 px-5 rounded-xl
                         {% if active == 'aset' %} bg-teal-600 {% else %} hover:bg-[#2B527C] {% endif %}">
-                            <i class="fa-solid fa-chart-line"></i>
+                            <i class="fa-solid fa-box"></i>
                             Aset
                         </a>
                 
@@ -58,18 +58,21 @@
                             <i class="fa-solid fa-chart-line"></i>
                             Kategori
                         </a>
-            <!-- <a href="/user"  class="flex items-center gap-4 py-4 px-5 rounded-xl hover:bg-[#2B527C] duration-300">
-                <i class="fa-solid fa-users"></i> User </a> -->
-            <a href="/laporan" class="flex items-center gap-4 py-4 px-5 rounded-xl hover:bg-[#2B527C] duration-300">
-                <i class="fa-solid fa-file-lines"></i> Laporan </a>
-        </div>
+
+                    <a href="/admin/laporan" class="flex items-center gap-4 py-4 px-5 rounded-xl
+                        {% if active == 'laporan' %} bg-teal-600 {% else %} hover:bg-[#2B527C] {% endif %}">
+                            <i class="fa-solid fa-file-invoice"></i>
+                            Laporan
+                        </a>
+                     </div>
 
         <!-- Logout -->
-        <div class="mt-auto p-5">
-            <a href="/" class="flex items-center justify-center gap-3 bg-red-500 hover:bg-red-600 py-4 rounded-xl">
-                <i class="fa-solid fa-right-from-bracket"></i>Logout
-            </a>
-        </div>
+            <div class="mt-auto px-5 py-6 border-t border-slate-700/30">
+                <a href="/logout" class="flex items-center gap-4 py-3 px-5 rounded-xl text-slate-400 hover:text-white hover:bg-[#2B527C]/55 transition duration-200 group">
+                    <i class="fa-solid fa-right-from-bracket w-5 text-center text-lg text-slate-400 group-hover:text-white"></i>
+                    <span class="font-medium">Logout</span>
+                </a>
+            </div>
     </aside>
 </body>
 </html>

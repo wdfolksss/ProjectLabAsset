@@ -50,6 +50,9 @@ def login():
 @app.route("/admin/kategori")
 def kategori():
 
+    if "role" not in session or session["role"] != "admin":
+        return redirect("/")
+
     conn = get_db()
     cursor = conn.cursor()
     sql = "SELECT * FROM kategori ORDER BY id_kategori DESC"
@@ -63,6 +66,7 @@ def kategori():
         active="kategori",
         kategori=kategori
     )
+
 # tambah kategori admin
 @app.route("/admin/kategori/tambah_kategori", methods=["GET", "POST"])
 def tambah_kategori():
@@ -108,7 +112,7 @@ def hapus_kategori(id_kategori):
     conn.close()
     return redirect("/admin/kategori")
 
- #aset admin   
+#aset admin   
 @app.route("/admin/aset")
 def data_aset():
     if "role" not in session or session["role"] != "admin":
@@ -140,6 +144,117 @@ def data_aset():
         aset=daftar_aset
     )
 
+#laporan admin
+@app.route("/admin/laporan")
+def laporan():
+    if "role" not in session or session["role"] != "admin":
+        return redirect("/")
+    conn = get_db()
+    cursor = conn.cursor()
+    
+    sql_tabel = """
+        SELECT aset.id_aset AS id_aset, 
+               aset.nama_aset, 
+               aset.kondisi, 
+               aset.lokasi, 
+               aset.jumlah, 
+               aset.tanggal_masuk, 
+               kategori.nama_kategori
+        FROM aset
+        LEFT JOIN kategori ON aset.id_kategori = kategori.id_kategori
+        ORDER BY aset.id_aset ASC
+    """
+    cursor.execute(sql_tabel)
+    daftar_aset = cursor.fetchall()
+    sql_total = "SELECT COUNT(*) AS total_jenis, SUM(jumlah) AS total_unit FROM aset"
+    cursor.execute(sql_total)
+    ringkasan = cursor.fetchone()
+    
+    cursor.close()
+    conn.close()
+    total_jenis = ringkasan['total_jenis'] if ringkasan else 0
+    total_unit = ringkasan['total_unit'] if ringkasan and ringkasan['total_unit'] else 0
+
+    return render_template(
+        "admin/laporan.html", 
+        active="laporan", 
+        aset=daftar_aset,
+        total_jenis=total_jenis,
+        total_unit=total_unit
+    )
+
+# aset asisten
+@app.route("/asisten/aset")
+def data_aset_asisten():
+    if "role" not in session or session["role"] != "asisten":
+        return redirect("/")
+        
+    conn = get_db()
+    cursor = conn.cursor()
+    sql = """
+        SELECT aset.id_aset AS id_aset, 
+               aset.nama_aset, 
+               aset.kondisi, 
+               aset.lokasi, 
+               aset.jumlah, 
+               aset.tanggal_masuk, 
+               kategori.nama_kategori
+        FROM aset
+        LEFT JOIN kategori ON aset.id_kategori = kategori.id_kategori
+        ORDER BY aset.id_aset DESC
+    """
+    cursor.execute(sql)
+    daftar_aset = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        "asisten/aset.html", 
+        active="aset", 
+        aset=daftar_aset
+    )
+
+#laporan asisten
+@app.route("/asisten/laporan")
+def laporan_asisten():
+    if "role" not in session or session["role"] != "asisten":
+        return redirect("/")
+        
+    conn = get_db()
+    cursor = conn.cursor()
+
+    sql_tabel = """
+        SELECT aset.id_aset AS id_aset, 
+               aset.nama_aset, 
+               aset.kondisi, 
+               aset.lokasi, 
+               aset.jumlah, 
+               aset.tanggal_masuk, 
+               kategori.nama_kategori
+        FROM aset
+        LEFT JOIN kategori ON aset.id_kategori = kategori.id_kategori
+        ORDER BY aset.id_aset ASC
+    """
+    cursor.execute(sql_tabel)
+    daftar_aset = cursor.fetchall()
+    
+    sql_total = "SELECT COUNT(*) AS total_jenis, SUM(jumlah) AS total_unit FROM aset"
+    cursor.execute(sql_total)
+    ringkasan = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    
+    total_jenis = ringkasan['total_jenis'] if ringkasan else 0
+    total_unit = ringkasan['total_unit'] if ringkasan and ringkasan['total_unit'] else 0
+
+    return render_template(
+        "asisten/laporan.html", 
+        active="laporan", 
+        aset=daftar_aset,
+        total_jenis=total_jenis,
+        total_unit=total_unit
+    )
+
 #dashboard admin
 @app.route("/admin/dashboard")
 def dashboard_admin():
@@ -150,6 +265,13 @@ def dashboard_admin():
 @app.route("/asisten/dashboard")
 def dashboard_asisten():
     return render_template("asisten/dashboard.html", active="dashboard")
+
+#logout
+@app.route("/logout")
+def logout():
+    session.clear()
+    flash("Anda telah berhasil logout.")
+    return redirect("/")    
 
 if __name__ == "__main__":
     app.run(debug=True)
