@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Aset - LabInventaris</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body class="bg-slate-100">
+<div class="flex flex-col md:flex-row min-h-screen">
+    
+    {% include 'layout/sidebar_admin.html' %}
+    
+    <div class="flex-1 p-4 sm:p-6 lg:p-10">
+
+        <div class="mb-6">
+            <h1 class="text-3xl font-bold text-slate-800">Data Aset</h1>
+            <p class="text-sm text-gray-500 mt-1">{{ aset|length }} dari {{ aset|length }} aset ditampilkan</p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm p-4 sm:p-5 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="relative w-full">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                        <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                    </span>
+                    <input type="text" placeholder="Cari kode atau nama aset..." 
+                        class="w-full text-sm pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none text-slate-700 transition duration-200">
+                </div>
+                
+                <div class="w-full">
+                    <select class="w-full text-sm px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none text-slate-600 appearance-none cursor-pointer">
+                        <option value="">Semua Kondisi</option>
+                        <option value="Baik">Baik</option>
+                        <option value="Rusak">Rusak</option>
+                        <option value="Perbaikan">Perbaikan</option>
+                    </select>
+                </div>
+
+                <div class="w-full">
+                    <select class="w-full text-sm px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none text-slate-600 appearance-none cursor-pointer">
+                        <option value="">Semua Kategori</option>
+                        <option value="Komputer & Laptop">Komputer & Laptop</option>
+                        <option value="Perangkat AV">Perangkat AV</option>
+                        <option value="Furnitur">Furnitur</option>
+                        <option value="Alat Praktikum">Alat Praktikum</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-slate-100">
+            <div class="overflow-x-auto w-full">
+                <table class="min-w-full table-auto whitespace-nowrap">
+                    <thead class="bg-slate-50 text-slate-500 uppercase text-xs font-semibold tracking-wider border-b border-slate-100">
+                        <tr>
+                            <th class="px-6 py-4 text-left w-16">No</th>
+                            <!-- <th class="px-6 py-4 text-left">Kode</th> -->
+                            <th class="px-6 py-4 text-left">Nama Aset</th>
+                            <th class="px-6 py-4 text-left">Kategori</th>
+                            <th class="px-6 py-4 text-left">Kondisi</th>
+                            <th class="px-6 py-4 text-left">Jumlah</th>
+                            <th class="px-6 py-4 text-left">Lokasi</th>
+                            <th class="px-6 py-4 text-left">Tgl. Masuk</th>
+                            <th class="px-6 py-4 text-center w-24">Aksi</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="text-sm text-slate-700 divide-y divide-slate-100">
+                        {% if aset %}
+                        {% for a in aset %}
+                        <tr class="hover:bg-slate-50/80 transition duration-150">
+                            <td class="px-6 py-4 text-gray-400">{{ loop.index }}</td>
+                            
+                            <td class="px-6 py-4 font-medium text-slate-400">AST-00{{ a.id_aset }}</td>
+                            
+                            <td class="px-6 py-4 font-semibold text-slate-800">{{ a.nama_aset }}</td>
+                            
+                            <td class="px-6 py-4 text-slate-500">{{ a.nama_kategori if a.nama_kategori else '-' }}</td>
+                            
+                            <td class="px-6 py-4">
+                                {% if a.kondisi == 'Baik' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-600 border border-emerald-100">
+                                    <i class="fa-regular fa-circle-check text-[10px]"></i> Baik
+                                </span>
+                                {% elif a.kondisi == 'Rusak' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-rose-50 text-rose-600 border border-rose-100">
+                                    <i class="fa-solid fa-triangle-exclamation text-[10px]"></i> Rusak
+                                </span>
+                                {% else %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-600 border border-amber-100">
+                                    <i class="fa-solid fa-screwdriver-wrench text-[10px]"></i> Perbaikan
+                                </span>
+                                {% endif %}
+                            </td>
+                            
+                            <td class="px-6 py-4 font-semibold text-slate-700">{{ a.jumlah }}</td>
+                            
+                            <td class="px-6 py-4 text-slate-500">{{ a.lokasi }}</td>
+                            
+                            <td class="px-6 py-4 text-slate-400">{{ a.tanggal_masuk }}</td>
+                            
+                            <td class="px-6 py-4">
+                                <div class="flex justify-center items-center gap-3">
+                                    <a href="/admin/aset/detail/{{ a.id_aset }}" class="text-slate-400 hover:text-slate-600 transition p-1" title="Lihat Detail">
+                                        <i class="fa-regular fa-eye text-base"></i>
+                                    </a>
+                                    <button onclick="bukaModalEdit('{{ a.id_aset }}')" class="text-slate-400 hover:text-slate-600 transition p-1 cursor-pointer" title="Edit Data">
+                                        <i class="fa-regular fa-pen-to-square text-base"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="9" class="py-16 text-center">
+                                <div class="flex flex-col items-center justify-center text-slate-400">
+                                    <i class="fa-solid fa-box-open text-4xl mb-3"></i>
+                                    <p class="font-medium">Belum ada data aset terdaftar</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

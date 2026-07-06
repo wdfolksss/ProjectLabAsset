@@ -46,16 +46,110 @@ def login():
         except Exception as e: flash(f"Error: {e}")
     return render_template("login.html")
 
+#admin kategori
+@app.route("/admin/kategori")
+def kategori():
+
+    conn = get_db()
+    cursor = conn.cursor()
+    sql = "SELECT * FROM kategori ORDER BY id_kategori DESC"
+    cursor.execute(sql)
+    kategori = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        "admin/kategori.html",
+        active="kategori",
+        kategori=kategori
+    )
+# tambah kategori admin
+@app.route("/admin/kategori/tambah_kategori", methods=["GET", "POST"])
+def tambah_kategori():
+    if request.method == "POST":
+        nama_kategori = request.form["nama_kategori"]
+        deskripsi = request.form["deskripsi"]
+        conn = get_db()
+        cursor = conn.cursor()
+
+        sql = """INSERT INTO kategori(nama_kategori, deskripsi) VALUES(%s, %s)"""
+        cursor.execute(sql, (nama_kategori, deskripsi))
+        conn.commit()
+        cursor.close()
+        conn.close()    
+    return redirect("/admin/kategori")
+
+# Edit kategori admin
+@app.route("/admin/kategori/edit_kategori/<int:id>", methods=["POST"])
+def edit_kategori(id):
+    conn = get_db()
+    cursor = conn.cursor()
+    
+    nama_kategori = request.form["nama_kategori"]
+    deskripsi = request.form["deskripsi"]
+    
+    sql = """ UPDATE kategori SET nama_kategori=%s, deskripsi=%s WHERE id_kategori=%s """
+    cursor.execute(sql, (nama_kategori, deskripsi, id))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    
+    return redirect("/admin/kategori")
+
+#hapus kategori admin
+@app.route("/admin/kategori/hapus/<int:id_kategori>")
+def hapus_kategori(id_kategori):
+    conn = get_db()
+    cursor = conn.cursor()
+    sql = "DELETE FROM kategori WHERE id_kategori=%s"
+    cursor.execute(sql, (id_kategori,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return redirect("/admin/kategori")
+
+ #aset admin   
+@app.route("/admin/aset")
+def data_aset():
+    if "role" not in session or session["role"] != "admin":
+        return redirect("/")
+        
+    conn = get_db()
+    cursor = conn.cursor()
+    
+    sql = """
+        SELECT aset.id_aset AS id_aset, 
+               aset.nama_aset, 
+               aset.kondisi, 
+               aset.lokasi, 
+               aset.jumlah, 
+               aset.tanggal_masuk, 
+               kategori.nama_kategori
+        FROM aset
+        LEFT JOIN kategori ON aset.id_kategori = kategori.id_kategori
+        ORDER BY aset.id_aset DESC
+    """
+    cursor.execute(sql)
+    daftar_aset = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        "admin/aset.html", 
+        active="aset", 
+        aset=daftar_aset
+    )
+
 #dashboard admin
 @app.route("/admin/dashboard")
 def dashboard_admin():
-    return render_template("admin/dashboard.html")
+    return render_template("admin/dashboard.html",active="dashboard", )
 
 
 #dashboard asisten
 @app.route("/asisten/dashboard")
 def dashboard_asisten():
-    return render_template("asisten/dashboard.html")
+    return render_template("asisten/dashboard.html", active="dashboard")
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -79,5 +79,7 @@ http://127.0.0.1:5000
 ## 📌 Pengembang
 
 Project ini dibuat sebagai tugas mata kuliah **Basis Data**.
-
-**Kelompok 6**
+**Kelompok 6:**
+Muhammad Rizky Adianto
+Warda Amalia
+Bunga Lestari
