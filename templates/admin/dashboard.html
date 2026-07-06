@@ -8,138 +8,194 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body class="bg-slate-100">
-    <div class="flex">
+<div class="flex flex-col md:flex-row min-h-screen">
+
     {% include 'layout/sidebar_admin.html' %}
-    <div class="flex-1">
-            
-            <!-- Navbar -->
-             <nav class="bg-white h-20 shadow flex items-center justify-between px-10">
-                <div>
-                    <h2 class="text-3xl font-bold text-slate-800">Dashboard</h2>
-                    <p class="text-gray-500">Ringkasan Data Inventaris Laboratorium
-                    </p>
-                </div>
 
-                <div class="flex items-center gap-5">
-                    <i class="fa-regular fa-bell text-2xl text-gray-500"></i>
-                    <div class="flex items-center gap-3">
-                        <div class="bg-teal-500 w-10 h-10 rounded-full flex justify-center items-center text-white">
-                            <i class="fa-solid fa-user"></i>
-                        </div>
-                        
-                        <div>
-                            <h3 class="font-semibold">  Administrator </h3>
-                            <p class="text-sm text-gray-500">Admin</p>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-              <!-- Card -->
-                <div class="p-10">
-                    <div class="space-y-6">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div class="bg-white rounded-2xl shadow p-6">
-                                <p class="text-gray-500"> Kondisi Baik </p>
-                                <h1 class="text-5xl font-bold text-green-600 mt-3"> 0 </h1>
-                            </div>
+    <div class="flex-1 p-4 sm:p-6 lg:p-10">
 
-                            <div class="bg-white rounded-2xl shadow p-6">
-                                <p class="text-gray-500"> Perlu Perbaikan </p>
-                                <h1 class="text-5xl font-bold text-orange-500 mt-3"> 0 </h1>
-                            </div>
-
-                            <div class="bg-white rounded-2xl shadow p-6">
-                                <p class="text-gray-500"> Rusak </p>
-                                <h1 class="text-5xl font-bold text-red-500 mt-3"> 0 </h1>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-col md:flex-row gap-6">
-                            <div class="bg-white rounded-2xl shadow p-6 flex-1">
-                                <p class="text-gray-500"> Kategori </p>
-                                <h1 class="text-5xl font-bold text-purple-600 mt-3"> 0 </h1>
-                            </div>
-
-                            <div class="bg-white rounded-2xl shadow p-6 flex-1">
-                                <p class="text-gray-500">Total Aset </p>
-                                <h1 class="text-5xl font-bold text-blue-700 mt-3"> 0 </h1>
-                            </div>
-                        </div>
-                    </div>
-
-            <!-- Chart -->
-            <div class="grid grid-cols-3 gap-6 mt-8">
-                <div class="col-span-2 bg-white rounded-2xl shadow p-6">
-                    <h2 class="text-xl font-semibold mb-6"> Grafik Aset </h2>
-                    <canvas id="barChart"></canvas>
-                </div>
-
-                <div class="bg-white rounded-2xl shadow p-6">
-                    <h2 class="text-xl font-semibold mb-6">Status Kondisi</h2>
-                    <canvas id="pieChart"></canvas>
-                </div>
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-5 mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-800">Dashboard</h1>
+                <p class="text-sm text-gray-500 mt-1">Ringkasan data inventaris laboratorium</p>
             </div>
 
-            <!-- Table -->
-            <div class="bg-white rounded-2xl shadow mt-8 overflow-hidden">
-                <div class="px-6 py-5 border-b">
-                    <h2 class="text-xl font-semibold">
-                        Data Aset Terbaru
-                    </h2>
+            <div class="bg-white shadow rounded-xl px-5 py-3 flex items-center gap-3">
+                <div class="bg-teal-500 w-10 h-10 rounded-full flex justify-center items-center text-white">
+                    <i class="fa-solid fa-user"></i>
                 </div>
+                <div>
+                    <h3 class="font-semibold text-slate-800">Administrator</h3>
+                    <p class="text-sm text-gray-500">Admin</p>
+                </div>
+            </div>
+        </div>
 
-                <table class="w-full">
-                    <thead class="bg-gray-100">
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-5 mb-8">
+            <div class="bg-white rounded-2xl shadow-sm p-5 border border-slate-100">
+                <p class="text-sm text-gray-500">Kondisi Baik</p>
+                <h1 class="text-4xl font-bold text-emerald-600 mt-3">{{ total_baik }}</h1>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm p-5 border border-slate-100">
+                <p class="text-sm text-gray-500">Perbaikan</p>
+                <h1 class="text-4xl font-bold text-amber-500 mt-3">{{ total_perbaikan }}</h1>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm p-5 border border-slate-100">
+                <p class="text-sm text-gray-500">Rusak</p>
+                <h1 class="text-4xl font-bold text-rose-500 mt-3">{{ total_rusak }}</h1>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm p-5 border border-slate-100">
+                <p class="text-sm text-gray-500">Kategori</p>
+                <h1 class="text-4xl font-bold text-purple-600 mt-3">{{ total_kategori }}</h1>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm p-5 border border-slate-100">
+                <p class="text-sm text-gray-500">Total Unit</p>
+                <h1 class="text-4xl font-bold text-blue-700 mt-3">{{ total_unit }}</h1>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
+            <div class="xl:col-span-2 bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+                <h2 class="text-lg font-bold text-slate-800 mb-6">Grafik Aset per Kategori</h2>
+                <canvas id="barChart"></canvas>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+                <h2 class="text-lg font-bold text-slate-800 mb-6">Status Kondisi</h2>
+                <canvas id="pieChart"></canvas>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-slate-100">
+            <div class="px-6 py-5 border-b border-slate-100 flex justify-between items-center">
+                <h2 class="text-lg font-bold text-slate-800">Data Aset Terbaru</h2>
+                <a href="/admin/aset" class="text-sm font-semibold text-teal-600 hover:text-teal-700">
+                    Lihat Semua
+                </a>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full table-auto whitespace-nowrap">
+                    <thead class="bg-slate-50 text-slate-500 uppercase text-xs font-semibold tracking-wider border-b border-slate-100">
                         <tr>
-                            <th class="p-4 text-left">Kode</th>
-                            <th class="p-4 text-left">Nama Aset</th>
-                            <th class="p-4 text-left">Kategori</th>
-                            <th class="p-4 text-left">Kondisi</th>
-                            <th class="p-4 text-left">Tanggal</th>
+                            <th class="px-6 py-4 text-left">Kode</th>
+                            <th class="px-6 py-4 text-left">Nama Aset</th>
+                            <th class="px-6 py-4 text-left">Kategori</th>
+                            <th class="px-6 py-4 text-left">Kondisi</th>
+                            <th class="px-6 py-4 text-left">Tanggal</th>
                         </tr>
                     </thead>
-                    <tbody>
 
-                        <tr class="border-b">
-                            <td class="p-4">AST001</td>
-                            <td class="p-4">Laptop Lenovo</td>
-                            <td class="p-4">Komputer</td>
-                            <td class="p-4">
-                                <span class="bg-green-100 text-green-700 px-4 py-1 rounded-full">
-                                    Baik
+                    <tbody class="text-sm text-slate-700 divide-y divide-slate-100">
+                        {% if aset_terbaru %}
+                        {% for a in aset_terbaru %}
+                        <tr class="hover:bg-slate-50/80 transition duration-150">
+                            <td class="px-6 py-4 font-medium text-slate-400">{{ a.kode }}</td>
+                            <td class="px-6 py-4 font-semibold text-slate-800">{{ a.nama_aset }}</td>
+                            <td class="px-6 py-4 text-slate-500">{{ a.nama_kategori if a.nama_kategori else '-' }}</td>
+                            <td class="px-6 py-4">
+                                {% if a.kondisi == 'Baik' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-600 border border-emerald-100">
+                                    <i class="fa-regular fa-circle-check text-[10px]"></i> Baik
                                 </span>
+                                {% elif a.kondisi == 'Rusak' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-rose-50 text-rose-600 border border-rose-100">
+                                    <i class="fa-solid fa-triangle-exclamation text-[10px]"></i> Rusak
+                                </span>
+                                {% else %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-600 border border-amber-100">
+                                    <i class="fa-solid fa-screwdriver-wrench text-[10px]"></i> Perbaikan
+                                </span>
+                                {% endif %}
                             </td>
-                            <td class="p-4">2023-01-01</td>
+                            <td class="px-6 py-4 text-slate-400">{{ a.tanggal_masuk }}</td>
                         </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="py-14 text-center text-slate-400">
+                                Belum ada data aset
+                            </td>
+                        </tr>
+                        {% endif %}
                     </tbody>
                 </table>
             </div>
         </div>
+
     </div>
 </div>
+
 <script>
+const kategoriLabels = [
+    {% for g in grafik_kategori %}
+        "{{ g.nama_kategori }}",
+    {% endfor %}
+];
+
+const kategoriData = [
+    {% for g in grafik_kategori %}
+        {{ g.total }},
+    {% endfor %}
+];
 
 new Chart(document.getElementById('barChart'), {
     type: 'bar',
     data: {
-        labels: ['Komputer','Printer','Proyektor','Mikroskop'],
+        labels: kategoriLabels,
         datasets: [{
-            label: 'Jumlah',
-            data: [5,2,4,3]
+            label: 'Jumlah Aset',
+            data: kategoriData,
+            borderWidth: 1
         }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    precision: 0
+                }
+            }
+        }
     }
 });
 
 new Chart(document.getElementById('pieChart'), {
-    type:'doughnut',
-    data:{
-        labels:['Baik','Rusak','Perbaikan'],
-        datasets:[{
-            data:[10,2,1]
+    type: 'doughnut',
+    data: {
+        labels: ['Baik', 'Rusak', 'Perbaikan'],
+        datasets: [{
+            data: [
+                {{ total_baik }},
+                {{ total_rusak }},
+                {{ total_perbaikan }}
+            ],
+            borderWidth: 1
         }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
     }
 });
 </script>
+
 </body>
 </html>

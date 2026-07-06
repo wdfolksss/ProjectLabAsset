@@ -14,11 +14,27 @@
     
     <div class="flex-1 p-4 sm:p-6 lg:p-10">
 
-        <div class="mb-6">
-            <h1 class="text-3xl font-bold text-slate-800">Data Aset</h1>
-            <p class="text-sm text-gray-500 mt-1">{{ aset|length }} dari {{ aset|length }} aset ditampilkan</p>
-        </div>
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-5 mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-800">Data Aset</h1>
+                <p class="text-sm text-gray-500 mt-1">{{ aset|length }} dari {{ aset|length }} aset ditampilkan</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="bg-white shadow rounded-xl px-5 py-3 text-slate-700">
+                    <i class="fa-solid fa-layer-group text-teal-600 mr-2"></i>
+                    {{ aset|length }} Aset
+                </span>
+                
+                <button onclick="toggleModal('modalTambah')"
+                    class="bg-teal-600 hover:bg-teal-700 duration-300 text-white px-6 py-3 rounded-xl shadow font-semibold cursor-pointer">
+                    <i class="fa-solid fa-plus mr-2"></i> Tambah
+                </button>
 
+            </div>
+
+        </div>
+        
+        
         <div class="bg-white rounded-2xl shadow-sm p-4 sm:p-5 mb-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="relative w-full">
@@ -41,13 +57,13 @@
                 <div class="w-full">
                     <select class="w-full text-sm px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none text-slate-600 appearance-none cursor-pointer">
                         <option value="">Semua Kategori</option>
-                        <option value="Komputer & Laptop">Komputer & Laptop</option>
-                        <option value="Perangkat AV">Perangkat AV</option>
-                        <option value="Furnitur">Furnitur</option>
-                        <option value="Alat Praktikum">Alat Praktikum</option>
+                        {% for k in kategori %}
+                        <option value="{{ k.id_kategori }}">{{ k.nama_kategori }}</option>
+                        {% endfor %}
                     </select>
                 </div>
             </div>
+            
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-slate-100">
@@ -73,7 +89,7 @@
                         <tr class="hover:bg-slate-50/80 transition duration-150">
                             <td class="px-6 py-4 text-gray-400">{{ loop.index }}</td>
                             
-                            <td class="px-6 py-4 font-medium text-slate-400">AST-00{{ a.id_aset }}</td>
+                            <td class="px-6 py-4 font-medium text-slate-400">{{ a.kode }}</td>
                             
                             <td class="px-6 py-4 font-semibold text-slate-800">{{ a.nama_aset }}</td>
                             
@@ -103,10 +119,23 @@
                             
                             <td class="px-6 py-4">
                                 <div class="flex justify-center items-center gap-3">
-                                    <a href="/admin/aset/detail/{{ a.id_aset }}" class="text-slate-400 hover:text-slate-600 transition p-1" title="Lihat Detail">
-                                        <i class="fa-regular fa-eye text-base"></i>
+                                    <a href="/admin/aset/hapus/{{ a.id_aset }}"
+                                    onclick="return confirm('Yakin ingin menghapus aset ini?')"
+                                    class="text-red-400 hover:text-red-600 transition p-1"
+                                    title="Hapus">
+                                        <i class="fa-solid fa-trash text-base"></i>
                                     </a>
-                                    <button onclick="bukaModalEdit('{{ a.id_aset }}')" class="text-slate-400 hover:text-slate-600 transition p-1 cursor-pointer" title="Edit Data">
+
+                                    <button onclick="bukaModalEdit(
+                                    '{{ a.id_aset }}',
+                                    '{{ a.kode }}',
+                                    '{{ a.nama_aset }}',
+                                    '{{ a.id_kategori }}',
+                                    '{{ a.jumlah }}',
+                                    '{{ a.kondisi }}',
+                                    '{{ a.lokasi }}',
+                                    '{{ a.tanggal_masuk }}')" 
+                                    class="text-slate-400 hover:text-slate-600 transition p-1 cursor-pointer" title="Edit Data">
                                         <i class="fa-regular fa-pen-to-square text-base"></i>
                                     </button>
                                 </div>
@@ -130,5 +159,207 @@
 
     </div>
 </div>
+<!-- MODAL TAMBAH -->
+<div id="modalTambah" class="fixed inset-0 z-50 hidden bg-black/40 px-4">
+    <div class="flex min-h-screen items-center justify-center">
+        <div class="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl shadow-xl p-6">
+            
+            <div class="flex items-center justify-between mb-5">
+                <h2 class="text-xl font-bold text-slate-800">Tambah Aset</h2>
+                <button onclick="toggleModal('modalTambah')" class="text-slate-400 hover:text-slate-700">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <form action="/admin/aset/tambah" method="POST" class="space-y-4">
+                <div>
+                    <label class="text-sm font-semibold text-slate-600">Kode</label>
+                    <input type="text" name="kode" required
+                        class="w-full mt-1 px-4 py-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+
+                <div>
+                    <label class="text-sm font-semibold text-slate-600">Nama Aset</label>
+                    <input type="text" name="nama_aset" required
+                        class="w-full mt-1 px-4 py-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+
+                <div>
+                    <label class="text-sm font-semibold text-slate-600">Kategori</label>
+                    <select name="id_kategori" required
+                        class="w-full mt-1 px-4 py-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-teal-500">
+                        {% for k in kategori %}
+                        <option value="{{ k.id_kategori }}">{{ k.nama_kategori }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-sm font-semibold text-slate-600">Kondisi</label>
+                        <select name="kondisi" required
+                            class="w-full mt-1 px-4 py-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-teal-500">
+                            <option value="Baik">Baik</option>
+                            <option value="Rusak">Rusak</option>
+                            <option value="Perbaikan">Perbaikan</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-semibold text-slate-600">Jumlah</label>
+                        <input type="number" name="jumlah" required
+                            class="w-full mt-1 px-4 py-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-teal-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-sm font-semibold text-slate-600">Lokasi</label>
+                    <input type="text" name="lokasi" required
+                        class="w-full mt-1 px-4 py-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+
+                <div>
+                    <label class="text-sm font-semibold text-slate-600">Tanggal Masuk</label>
+                    <input type="date" name="tanggal_masuk" required
+                        class="w-full mt-1 px-4 py-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" onclick="toggleModal('modalTambah')"
+                        class="px-5 py-3 rounded-xl bg-slate-100 text-slate-600 font-semibold">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="px-5 py-3 rounded-xl bg-teal-600 text-white font-semibold hover:bg-teal-700">
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- MODAL EDIT -->
+<div id="modalEdit" class="fixed inset-0 z-50 hidden bg-black/40 px-4">
+    <div class="flex min-h-screen items-center justify-center">
+        <div class="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl shadow-xl p-6">
+            
+            <div class="flex items-center justify-between mb-5">
+                <h2 class="text-xl font-bold text-slate-800">Edit Aset</h2>
+                <button onclick="toggleModal('modalEdit')" class="text-slate-400 hover:text-slate-700">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <form id="formEdit" method="POST" class="space-y-4">
+                <div>
+                    <label class="text-sm font-semibold text-slate-600">Kode</label>
+                    <input type="text" id="edit_kode" name="kode" readonly
+                        class="w-full mt-1 px-4 py-3 bg-slate-100 border rounded-xl outline-none text-slate-500">
+                </div>
+
+                <div>
+                    <label class="text-sm font-semibold text-slate-600">Nama Aset</label>
+                    <input type="text" id="edit_nama_aset" name="nama_aset" required
+                        class="w-full mt-1 px-4 py-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+
+                <div>
+                    <label class="text-sm font-semibold text-slate-600">Kategori</label>
+                    <select id="edit_id_kategori" name="id_kategori" required
+                        class="w-full mt-1 px-4 py-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-teal-500">
+                        {% for k in kategori %}
+                        <option value="{{ k.id_kategori }}">{{ k.nama_kategori }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-sm font-semibold text-slate-600">Kondisi</label>
+                        <select id="edit_kondisi" name="kondisi" required
+                            class="w-full mt-1 px-4 py-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-teal-500">
+                            <option value="Baik">Baik</option>
+                            <option value="Rusak">Rusak</option>
+                            <option value="Perbaikan">Perbaikan</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-semibold text-slate-600">Jumlah</label>
+                        <input type="number" id="edit_jumlah" name="jumlah" required
+                            class="w-full mt-1 px-4 py-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-teal-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-sm font-semibold text-slate-600">Lokasi</label>
+                    <input type="text" id="edit_lokasi" name="lokasi" required
+                        class="w-full mt-1 px-4 py-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+
+                <div>
+                    <label class="text-sm font-semibold text-slate-600">Tanggal Masuk</label>
+                    <input type="date" id="edit_tanggal_masuk" name="tanggal_masuk" required
+                        class="w-full mt-1 px-4 py-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" onclick="toggleModal('modalEdit')"
+                        class="px-5 py-3 rounded-xl bg-slate-100 text-slate-600 font-semibold">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="px-5 py-3 rounded-xl bg-teal-600 text-white font-semibold hover:bg-teal-700">
+                        Update
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+function toggleModal(id) {
+    const modal = document.getElementById(id);
+    if (!modal) return;
+
+    modal.classList.toggle("hidden");
+    document.body.classList.toggle("overflow-hidden");
+}
+
+function bukaModalEdit(id_aset, kode, nama_aset, id_kategori, jumlah, kondisi, lokasi, tanggal_masuk) {
+    document.getElementById("formEdit").action = "/admin/aset/edit/" + id_aset;
+
+    document.getElementById("edit_kode").value = kode;
+    document.getElementById("edit_nama_aset").value = nama_aset;
+    document.getElementById("edit_id_kategori").value = id_kategori;
+    document.getElementById("edit_jumlah").value = jumlah;
+    document.getElementById("edit_kondisi").value = kondisi;
+    document.getElementById("edit_lokasi").value = lokasi;
+    document.getElementById("edit_tanggal_masuk").value = tanggal_masuk;
+
+    toggleModal("modalEdit");
+}
+
+document.addEventListener("keydown", function(e){
+
+    if(e.key === "Escape"){
+
+        const tambah = document.getElementById("modalTambah");
+        const edit = document.getElementById("modalEdit");
+
+        if(!tambah.classList.contains("hidden")){
+            toggleModal("modalTambah");
+        }
+
+        if(!edit.classList.contains("hidden")){
+            toggleModal("modalEdit");
+        }
+
+    }
+
+});
+</script>
 </body>
 </html>

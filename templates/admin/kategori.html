@@ -31,56 +31,57 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-2xl shadow overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="min-w-full">
-                    <thead class="bg-[#1F456D] text-white">
-                        <tr>
-                            <th class="px-6 py-4 text-left">No</th>
-                            <th class="px-6 py-4 text-left">Nama Kategori</th>
-                            <th class="px-6 py-4 text-left">Deskripsi</th>
-                            <th class="px-6 py-4 text-center">Aksi</th>
-                        </tr>
-                    </thead>
+                <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-slate-100">
+                    <div class="overflow-x-auto w-full">
+                        <table class="min-w-full table-auto whitespace-nowrap">
+                            <thead class="bg-slate-50 text-slate-500 uppercase text-xs font-semibold tracking-wider border-b border-slate-100">
+                                <tr>
+                                    <th class="px-6 py-4 text-left w-16">No</th>
+                                    <th class="px-6 py-4 text-left">Nama Kategori</th>
+                                    <th class="px-6 py-4 text-left">Deskripsi</th>
+                                    <th class="px-6 py-4 text-center w-24">Aksi</th>
+                                </tr>
+                            </thead>
 
-                    <tbody>
-                        {% if kategori %}
-                        {% for k in kategori %}
-                        <tr class="border-b hover:bg-slate-50 duration-200">
-                            <td class="px-6 py-4"> {{ loop.index }} </td>
-                            <td class="px-6 py-4 font-semibold text-slate-800"> {{ k.nama_kategori }}</td>
-                            <td class="px-6 py-4 text-gray-600"> {{ k.deskripsi }}</td>
-                            <td class="px-6 py-4">
-                                <div class="flex justify-center gap-3">
-                                    <button onclick="bukaModalEdit('{{ k.id_kategori }}', '{{ k.nama_kategori | replace('\'', '\\\'') }}', '{{ k.deskripsi | replace('\n', ' ') | replace('\'', '\\\'') }}')"
-                                        class="w-10 h-10 rounded-lg bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center cursor-pointer">
-                                        <i class="fa-solid fa-pen"></i>
-                                    </button>
+                            <tbody class="text-sm text-slate-700 divide-y divide-slate-100">
+                                {% if kategori %}
+                                {% for k in kategori %}
+                                <tr class="hover:bg-slate-50/80 transition duration-150">
+                                    <td class="px-6 py-4 text-gray-400">{{ loop.index }}</td>
+                                    <td class="px-6 py-4 font-semibold text-slate-800">{{ k.nama_kategori }}</td>
+                                    <td class="px-6 py-4 text-slate-500">{{ k.deskripsi }}</td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex justify-center items-center gap-3">
+                                            <button onclick="bukaModalEdit('{{ k.id_kategori }}', '{{ k.nama_kategori | replace('\'', '\\\'') }}', '{{ k.deskripsi | replace('\n', ' ') | replace('\'', '\\\'') }}')"
+                                                class="text-slate-400 hover:text-slate-600 transition p-1 cursor-pointer"
+                                                title="Edit Data">
+                                                <i class="fa-regular fa-pen-to-square text-base"></i>
+                                            </button>
 
-                                    <a href="/admin/kategori/hapus/{{ k.id_kategori }}"
-                                        onclick="return confirm('Yakin ingin menghapus kategori ini?')"
-                                        class="w-10 h-10 rounded-lg bg-red-500 hover:bg-red-600 text-white flex items-center justify-center">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                        {% else %}
-                        <tr>
-                            <td colspan="4" class="py-14 text-center">
-                                <div class="flex flex-col items-center">
-                                    <div class="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center mb-4">
-                                        <i class="fa-solid fa-folder-open text-4xl text-slate-400"></i>
-                                    </div>
-                                    <h2 class="text-xl font-semibold text-slate-700">Belum Ada Kategori</h2>
-                                    <p class="text-gray-500 mt-2">Silakan tambahkan kategori baru.</p>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endif %}
-                    </tbody>
-                </table>
+                                            <a href="/admin/kategori/hapus/{{ k.id_kategori }}"
+                                                onclick="return confirm('Yakin ingin menghapus kategori ini?')"
+                                                class="text-red-400 hover:text-red-600 transition p-1"
+                                                title="Hapus Data">
+                                                <i class="fa-solid fa-trash text-base"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% else %}
+                                <tr>
+                                    <td colspan="4" class="py-16 text-center">
+                                        <div class="flex flex-col items-center justify-center text-slate-400">
+                                            <i class="fa-solid fa-folder-open text-4xl mb-3"></i>
+                                            <p class="font-medium">Belum ada kategori terdaftar</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
