@@ -25,39 +25,51 @@
                     {{ aset|length }} Aset
                 </span>
             </div>
+
         </div>
         
-        
-        <div class="bg-white rounded-2xl shadow-sm p-4 sm:p-5 mb-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <form method="GET" action="/asisten/aset" class="bg-white rounded-2xl shadow-sm p-4 sm:p-5 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div class="relative w-full">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
                         <i class="fa-solid fa-magnifying-glass text-sm"></i>
                     </span>
-                    <input type="text" placeholder="Cari kode atau nama aset..." 
-                        class="w-full text-sm pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none text-slate-700 transition duration-200">
-                </div>
-                
-                <div class="w-full">
-                    <select class="w-full text-sm px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none text-slate-600 appearance-none cursor-pointer">
-                        <option value="">Semua Kondisi</option>
-                        <option value="Baik">Baik</option>
-                        <option value="Rusak">Rusak</option>
-                        <option value="Perbaikan">Perbaikan</option>
-                    </select>
+                    <input type="text" name="q" value="{{ q }}"
+                        placeholder="Cari kode atau nama aset..."
+                        class="w-full text-sm pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none text-slate-700">
                 </div>
 
-                <div class="w-full">
-                    <select class="w-full text-sm px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none text-slate-600 appearance-none cursor-pointer">
-                        <option value="">Semua Kategori</option>
-                        {% for k in kategori %}
-                        <option value="{{ k.id_kategori }}">{{ k.nama_kategori }}</option>
-                        {% endfor %}
-                    </select>
+                <select name="kondisi"
+                    class="w-full text-sm px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none text-slate-600">
+                    <option value="">Semua Kondisi</option>
+                    <option value="Baik" {% if kondisi == 'Baik' %}selected{% endif %}>Baik</option>
+                    <option value="Rusak" {% if kondisi == 'Rusak' %}selected{% endif %}>Rusak</option>
+                    <option value="Perbaikan" {% if kondisi == 'Perbaikan' %}selected{% endif %}>Perbaikan</option>
+                </select>
+
+                <select name="kategori"
+                    class="w-full text-sm px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none text-slate-600">
+                    <option value="">Semua Kategori</option>
+                    {% for k in kategori %}
+                    <option value="{{ k.id_kategori }}" {% if kategori_filter == k.id_kategori|string %}selected{% endif %}>
+                        {{ k.nama_kategori }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <div class="flex gap-3">
+                    <button type="submit"
+                        class="w-full bg-teal-600 hover:bg-teal-700 text-white px-4 py-3 rounded-xl font-semibold">
+                        Filter
+                    </button>
+
+                    <a href="/asisten/aset"
+                        class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 px-4 py-3 rounded-xl font-semibold text-center">
+                        Reset
+                    </a>
                 </div>
             </div>
-            
-        </div>
+        </form>
 
         <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-slate-100">
             <div class="overflow-x-auto w-full">
@@ -151,13 +163,9 @@
         <div class="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl shadow-xl p-6">
             
             <div class="flex items-center justify-between mb-5">
-                <h2 class="text-xl font-bold text-slate-800">Tambah Aset</h2>
-                <button onclick="toggleModal('modalTambah')" class="text-slate-400 hover:text-slate-700">
-                    <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
             </div>
 
-            <form action="/admin/aset/tambah" method="POST" class="space-y-4">
+            <form action="/asisten/aset/tambah" method="POST" class="space-y-4">
                 <div>
                     <label class="text-sm font-semibold text-slate-600">Kode</label>
                     <input type="text" name="kode" required

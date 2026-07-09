@@ -134,10 +134,14 @@ def hapus_kategori(id_kategori):
 def data_aset():
     if "role" not in session or session["role"] != "admin":
         return redirect("/")
-        
+
+    q = request.args.get("q", "")
+    kondisi = request.args.get("kondisi", "")
+    kategori_filter = request.args.get("kategori", "")
+
     conn = get_db()
     cursor = conn.cursor()
-    
+
     sql_aset = """
         SELECT aset.id_aset,
                aset.nama_aset,
@@ -150,52 +154,93 @@ def data_aset():
                kategori.nama_kategori
         FROM aset
         LEFT JOIN kategori ON aset.id_kategori = kategori.id_kategori
-        ORDER BY aset.id_aset DESC
+        WHERE 1=1
     """
-    cursor.execute(sql_aset)
+
+    params = []
+
+    if q:
+        sql_aset += " AND (aset.kode LIKE %s OR aset.nama_aset LIKE %s)"
+        params.extend([f"%{q}%", f"%{q}%"])
+
+    if kondisi:
+        sql_aset += " AND aset.kondisi = %s"
+        params.append(kondisi)
+
+    if kategori_filter:
+        sql_aset += " AND aset.id_kategori = %s"
+        params.append(kategori_filter)
+
+    sql_aset += " ORDER BY aset.id_aset DESC"
+
+    cursor.execute(sql_aset, params)
     daftar_aset = cursor.fetchall()
 
-    sql_kategori = "SELECT * FROM kategori ORDER BY nama_kategori ASC"
-    cursor.execute(sql_kategori)
+    cursor.execute("SELECT * FROM kategori ORDER BY nama_kategori ASC")
     daftar_kategori = cursor.fetchall()
 
     cursor.close()
     conn.close()
 
     return render_template(
-        "admin/aset.html", 
-        active="aset", 
+        "admin/aset.html",
+        active="aset",
         aset=daftar_aset,
-        kategori=daftar_kategori
+        kategori=daftar_kategori,
+        q=q,
+        kondisi=kondisi,
+        kategori_filter=kategori_filter
     )
-
+    
 #aset asisten
 @app.route("/asisten/aset")
-def aset_asisten():
+def aset_admin():
     if "role" not in session or session["role"] != "asisten":
         return redirect("/")
+
+    q = request.args.get("q", "")
+    kondisi = request.args.get("kondisi", "")
+    kategori_filter = request.args.get("kategori", "")
 
     conn = get_db()
     cursor = conn.cursor()
 
-    cursor.execute("""
+    sql_aset = """
         SELECT aset.id_aset,
-               aset.kode,
                aset.nama_aset,
+               aset.kode,
                aset.id_kategori,
-               aset.jumlah,
                aset.kondisi,
                aset.lokasi,
+               aset.jumlah,
                aset.tanggal_masuk,
                kategori.nama_kategori
         FROM aset
         LEFT JOIN kategori ON aset.id_kategori = kategori.id_kategori
-        ORDER BY aset.id_aset DESC
-    """)
-    aset = cursor.fetchall()
+        WHERE 1=1
+    """
+
+    params = []
+
+    if q:
+        sql_aset += " AND (aset.kode LIKE %s OR aset.nama_aset LIKE %s)"
+        params.extend([f"%{q}%", f"%{q}%"])
+
+    if kondisi:
+        sql_aset += " AND aset.kondisi = %s"
+        params.append(kondisi)
+
+    if kategori_filter:
+        sql_aset += " AND aset.id_kategori = %s"
+        params.append(kategori_filter)
+
+    sql_aset += " ORDER BY aset.id_aset DESC"
+
+    cursor.execute(sql_aset, params)
+    daftar_aset = cursor.fetchall()
 
     cursor.execute("SELECT * FROM kategori ORDER BY nama_kategori ASC")
-    kategori = cursor.fetchall()
+    daftar_kategori = cursor.fetchall()
 
     cursor.close()
     conn.close()
@@ -203,8 +248,11 @@ def aset_asisten():
     return render_template(
         "asisten/aset.html",
         active="aset",
-        aset=aset,
-        kategori=kategori
+        aset=daftar_aset,
+        kategori=daftar_kategori,
+        q=q,
+        kondisi=kondisi,
+        kategori_filter=kategori_filter
     )
 
 #tambah aset admin
@@ -532,10 +580,14 @@ def laporan_admin():
 #laporan asisten
 @app.route('/asisten/laporan')
 def laporan_asisten():
-    
+    if "role" not in session or session["role"] != "asisten":
+        return redirect("/")
+
+    filter_kondisi = request.args.get("filter", "semua")
+
     conn = get_db()
     cursor = conn.cursor()
-    
+
     sql_aset = """
         SELECT aset.id_aset,
                aset.nama_aset,
@@ -548,32 +600,38 @@ def laporan_asisten():
                kategori.nama_kategori
         FROM aset
         LEFT JOIN kategori ON aset.id_kategori = kategori.id_kategori
-        ORDER BY aset.id_aset DESC
+        WHERE 1=1
     """
-    cursor.execute(sql_aset)
+
+    params = []
+
+    if filter_kondisi == "baik":
+        sql_aset += " AND aset.kondisi = %s"
+        params.append("Baik")
+
+    elif filter_kondisi == "rusak_perbaikan":
+        sql_aset += " AND aset.kondisi IN (%s, %s)"
+        params.extend(["Rusak", "Perbaikan"])
+
+    sql_aset += " ORDER BY aset.id_aset DESC"
+
+    cursor.execute(sql_aset, params)
     daftar_aset = cursor.fetchall()
 
-    sql_kategori = "SELECT * FROM kategori ORDER BY nama_kategori ASC"
-    cursor.execute(sql_kategori)
-    daftar_kategori = cursor.fetchall()
-    
-    cursor.execute("SELECT COUNT(*) AS total FROM aset")
-    total_jenis = cursor.fetchone()["total"]
-
-    cursor.execute("SELECT COALESCE(SUM(jumlah), 0) AS total FROM aset")
-    total_unit = cursor.fetchone()["total"]
+    total_jenis = len(daftar_aset)
+    total_unit = sum(int(a["jumlah"]) for a in daftar_aset)
 
     cursor.close()
     conn.close()
 
     return render_template(
-        "asisten/laporan.html", 
-        active="laporan", 
+        "asisten/laporan.html",
+        active="laporan",
         aset=daftar_aset,
         total_jenis=total_jenis,
         total_unit=total_unit,
-        kategori=daftar_kategori,
-        sekarang=datetime.now()
+        sekarang=datetime.now(),
+        filter=filter_kondisi
     )
 
 
@@ -585,4 +643,4 @@ def logout():
     return redirect("/")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=False)

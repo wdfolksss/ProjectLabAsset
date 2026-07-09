@@ -6,6 +6,91 @@
     <title>Laporan Admin Inventaris - LabInventaris</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <style>
+    @media print {
+        @page {
+            size: A4 landscape;
+            margin: 10mm;
+        }
+
+        body {
+            background: white !important;
+        }
+
+        .no-print {
+            display: none !important;
+        }
+
+        .print-area {
+            width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .flex {
+            display: block !important;
+        }
+
+        .bg-white {
+            background: white !important;
+        }
+
+        .shadow,
+        .shadow-sm,
+        .rounded-xl,
+        .rounded-2xl {
+            box-shadow: none !important;
+            border-radius: 0 !important;
+        }
+
+        .overflow-x-auto {
+            overflow: visible !important;
+        }
+
+        table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            table-layout: fixed !important;
+            font-size: 10px !important;
+        }
+
+        th, td {
+            border: 1px solid #cbd5e1 !important;
+            padding: 6px !important;
+            white-space: normal !important;
+            word-break: break-word !important;
+            vertical-align: top !important;
+        }
+
+        th {
+            background: #f1f5f9 !important;
+            color: #334155 !important;
+            text-align: center !important;
+        }
+
+        td:nth-child(1),
+        td:nth-child(5),
+        td:nth-child(6),
+        td:nth-child(8) {
+            text-align: center !important;
+        }
+
+        span {
+            background: transparent !important;
+            border: none !important;
+            color: black !important;
+            padding: 0 !important;
+        }
+
+        i {
+            display: none !important;
+        }
+
+        tr {
+            page-break-inside: avoid !important;
+        }
+    }
+    </style>
 </head>
 <body class="bg-slate-100">
 <div class="flex flex-col md:flex-row min-h-screen">
@@ -30,16 +115,24 @@
             </div>
         </div>
 
-        <div class="flex flex-wrap gap-2 mb-6">
-            <button class="px-4 py-2 text-xs sm:text-sm font-medium bg-slate-800 text-white rounded-xl shadow-sm cursor-pointer">
+        <div class="flex flex-wrap gap-2 mb-6 no-print">
+            <a href="/asisten/laporan"
+            class="px-4 py-2 text-xs sm:text-sm font-medium rounded-xl shadow-sm cursor-pointer
+            {% if filter == 'semua' %} bg-slate-800 text-white {% else %} bg-white text-slate-600 border border-slate-200 {% endif %}">
                 Semua Aset
-            </button>
-            <button class="px-4 py-2 text-xs sm:text-sm font-medium bg-white text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 transition cursor-pointer">
+            </a>
+
+            <a href="/asisten/laporan?filter=baik"
+            class="px-4 py-2 text-xs sm:text-sm font-medium rounded-xl shadow-sm cursor-pointer
+            {% if filter == 'baik' %} bg-slate-800 text-white {% else %} bg-white text-slate-600 border border-slate-200 {% endif %}">
                 Kondisi Baik
-            </button>
-            <button class="px-4 py-2 text-xs sm:text-sm font-medium bg-white text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 transition cursor-pointer">
+            </a>
+
+            <a href="/asisten/laporan?filter=rusak_perbaikan"
+            class="px-4 py-2 text-xs sm:text-sm font-medium rounded-xl shadow-sm cursor-pointer
+            {% if filter == 'rusak_perbaikan' %} bg-slate-800 text-white {% else %} bg-white text-slate-600 border border-slate-200 {% endif %}">
                 Rusak & Perbaikan
-            </button>
+            </a>
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm p-6 mb-6 border border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
